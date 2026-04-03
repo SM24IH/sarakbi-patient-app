@@ -3,3 +3,9 @@ node_modules
 .env
 .DS_Store
 ios/.derivedData
+
+# Local DB / caches (do not commit)
+prisma/*.db
+prisma/*.db-journal
+.npm-cache
+*.tsbuildinfo
