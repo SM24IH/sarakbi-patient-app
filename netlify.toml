@@ -1,0 +1,6 @@
+# Full Next.js app (including /api/*). Requires DATABASE_URL and SESSION_SECRET in Netlify UI.
+[build]
+  command = "npx prisma generate && npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

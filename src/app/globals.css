@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Cream base + steel blue (primary) + logo gold — patient portal & site */
+  --color-cream: #faf8f5;
+  --color-cream-dark: #f0ebe3;
+  --color-cream-blue: #f3f6fa;
+  --color-ink: #1c1917;
+  --color-ink-muted: #57534e;
+  /* Primary accent: blue on cream (Tailwind `teal` token kept for existing classes) */
+  --color-teal: #2a4d72;
+  --color-teal-light: #3d6b98;
+  --color-blue: #2a4d72;
+  --color-blue-light: #3d6b98;
+  --color-gold: #9a7b4f;
+  --color-gold-soft: #c4a574;
+}
+
+body {
+  @apply bg-cream text-ink antialiased;
+  font-family: var(--font-sans);
+}
