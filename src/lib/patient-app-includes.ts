@@ -1,27 +1,27 @@
-/** What the patient portal / app is designed to offer (marketing & in-app copy). */
+/** What the patient portal / app focuses on (aligned with tabs and web shortcuts). */
 export const patientAppIncludes = [
   {
-    title: "Recovery guides",
-    description: "Step-by-step guides for each procedure, with activity milestones.",
+    title: "Appointments",
+    description: "Request visits, review status, and add reminders on your device.",
   },
   {
-    title: "Appointment reminders",
-    description: "So you never miss a follow-up.",
+    title: "Messages",
+    description: "Non-urgent questions for the practice team — not for emergencies.",
   },
   {
-    title: "Post-operative instructions",
-    description: "Wound care, medications and activity advice.",
+    title: "Photos",
+    description: "Upload wound checks or other images for the clinic team to review.",
   },
   {
-    title: "FAQ library",
-    description: "Answers to common recovery questions.",
-  },
-  {
-    title: "Direct messaging",
-    description: "Communicate with the practice team.",
-  },
-  {
-    title: "Shared documents",
+    title: "Documents",
     description: "Letters and resources the clinic shares with you (secure links).",
+  },
+  {
+    title: "Recovery & information",
+    description: "Guides, checklists, FAQs, and trusted links — in the Care section.",
+  },
+  {
+    title: "Practice details",
+    description: "Locations, contact routes, and surgeon biography — on the website and in the app.",
   },
 ] as const;

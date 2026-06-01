@@ -31,7 +31,7 @@ export default function TeamPatientsPage() {
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="font-serif text-3xl font-semibold text-ink">Patients</h1>
-      <p className="mt-2 text-sm text-ink-muted">Registered portal accounts (demo data).</p>
+      <p className="mt-2 text-sm text-ink-muted">Patients who have a portal account.</p>
       {loading ? (
         <p className="mt-8 text-sm text-ink-muted">Loading…</p>
       ) : (

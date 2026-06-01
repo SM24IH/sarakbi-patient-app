@@ -1,6 +1,6 @@
 /**
- * Canonical public origin for this deployment (HTTPS links, native app API base).
- * Set NEXT_PUBLIC_SITE_URL in production (e.g. https://your-app.netlify.app).
+ * Canonical origin for this portal/API deployment (HTTPS, iOS API_BASE_URL).
+ * Set NEXT_PUBLIC_SITE_URL in production (e.g. https://portal.willsarakbi.com).
  */
 export function getPublicSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
@@ -12,5 +12,5 @@ export function getPublicSiteUrl(): string {
     const host = vercel.startsWith("http") ? vercel : `https://${vercel}`;
     return host.replace(/\/$/, "");
   }
-  return "https://regal-salmiakki-509632.netlify.app";
+  return "https://sarakbi-patient-app.vercel.app";
 }

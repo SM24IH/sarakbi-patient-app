@@ -14,8 +14,13 @@ function escapeICS(value: string) {
 }
 
 function toICSUTC(d: Date) {
-  // 2026-03-30T12:34:56.000Z => 20260330T123456Z
-  return d.toISOString().replace(/[-:]/g, "").replace(".000", "") + "Z";
+  const y = d.getUTCFullYear();
+  const mo = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(d.getUTCDate()).padStart(2, "0");
+  const h = String(d.getUTCHours()).padStart(2, "0");
+  const min = String(d.getUTCMinutes()).padStart(2, "0");
+  const s = String(d.getUTCSeconds()).padStart(2, "0");
+  return `${y}${mo}${day}T${h}${min}${s}Z`;
 }
 
 export async function GET(_request: Request, { params }: Params) {

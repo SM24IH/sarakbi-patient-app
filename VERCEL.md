@@ -22,7 +22,9 @@ Repo root: `sarakbi-patient-app` (this folder).
 |------|--------|
 | `DATABASE_URL` | `postgresql://user:pass@host/db?sslmode=require` |
 | `SESSION_SECRET` | Long random string (32+ characters) |
-| `NEXT_PUBLIC_SITE_URL` | `https://YOUR-PROJECT.vercel.app` (no trailing slash) |
+| `NEXT_PUBLIC_SITE_URL` | `https://sarakbi-patient-app.vercel.app` (portal API — no trailing slash) |
+| `NEXT_PUBLIC_PRACTICE_WEBSITE_URL` | `https://www.willsarakbi.com` (marketing site links) |
+| `BLOB_READ_WRITE_TOKEN` | Auto-added when you connect **Vercel Blob** storage (required for patient photo uploads in production) |
 
 4. Deploy.
 
@@ -41,7 +43,7 @@ npm run db:seed
 (Optional) Create a surgeon account:
 
 ```bash
-npm run db:create-staff -- --email you@clinic.com --name "Your Name" --password "YourSecurePass123!"
+npm run db:create-staff -- --email YOUR_STAFF_EMAIL --name "Your Name" --password "YourSecurePass123!"
 ```
 
 ## 5) Smoke test

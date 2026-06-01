@@ -3,12 +3,12 @@ import Link from "next/link";
 import { Card } from "@/components/ui";
 import { isPublicRegistrationEnabled } from "@/lib/features";
 import { patientAppIncludes } from "@/lib/patient-app-includes";
-import { getPublicSiteUrl } from "@/lib/site-url";
+import { getPracticeWebsiteUrl } from "@/lib/practice-website-url";
 
 export const dynamic = "force-dynamic";
 
 export default function HomePage() {
-  const SITE = getPublicSiteUrl();
+  const SITE = getPracticeWebsiteUrl();
   const allowReg = isPublicRegistrationEnabled();
   return (
     <div className="min-h-screen bg-gradient-to-b from-cream-blue via-cream to-cream-dark">
@@ -104,8 +104,7 @@ export default function HomePage() {
           GMC 6027127 ·{" "}
           <a href={SITE} className="text-teal underline-offset-2 hover:underline">
             Mr Will Sarakbi
-          </a>{" "}
-          · This portal is a demonstration; configure hosting, database, and clinical governance before live use.
+          </a>
         </p>
       </main>
     </div>

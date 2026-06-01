@@ -12,3 +12,5 @@ prisma/*.db-journal
 
 # Accidental ssh-keygen junk
 /eval*
+.vercel
+.uploads

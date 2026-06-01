@@ -1,18 +1,18 @@
 import Link from "next/link";
 import { Card } from "@/components/ui";
-import { getPublicSiteUrl } from "@/lib/site-url";
+import { getPracticeWebsiteUrl } from "@/lib/practice-website-url";
 
 export default function ContactPage() {
-  const SITE = getPublicSiteUrl();
+  const SITE = getPracticeWebsiteUrl();
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="font-serif text-3xl font-semibold text-ink">Contact & locations</h1>
       <p className="mt-2 text-sm text-ink-muted">
-        Replace placeholder numbers with live reception lines before production.         Use{" "}
+        Reception numbers and opening hours are on the main website. For non-urgent clinical questions, use{" "}
         <Link href="/portal/messages" className="text-teal hover:underline">
           secure messaging
-        </Link>{" "}
-        for non-urgent queries.
+        </Link>
+        .
       </p>
 
       <div className="mt-8 space-y-6">
@@ -20,9 +20,13 @@ export default function ContactPage() {
           <h2 className="font-serif text-xl font-semibold text-teal">Cadogan Clinic, Chelsea</h2>
           <p className="mt-2 text-sm text-ink-muted">120 Sloane Street, London SW1X 9BW</p>
           <p className="mt-4 text-sm">
-            <span className="text-ink-muted">Phone (placeholder): </span>
-            <a href="tel:+442000000000" className="font-medium text-teal hover:underline">
-              +44 20 0000 0000
+            <a
+              href={`${SITE}/contact/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-teal hover:underline"
+            >
+              Phone numbers and directions →
             </a>
           </p>
         </Card>
@@ -30,9 +34,13 @@ export default function ContactPage() {
           <h2 className="font-serif text-xl font-semibold text-teal">Shirley Oaks Hospital, Surrey</h2>
           <p className="mt-2 text-sm text-ink-muted">One Stop Clinic & breast cancer services</p>
           <p className="mt-4 text-sm">
-            <span className="text-ink-muted">Phone (placeholder): </span>
-            <a href="tel:+442000000001" className="font-medium text-teal hover:underline">
-              +44 20 0000 0001
+            <a
+              href={`${SITE}/contact/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-teal hover:underline"
+            >
+              Phone numbers and directions →
             </a>
           </p>
         </Card>

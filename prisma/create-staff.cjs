@@ -25,7 +25,7 @@ function usage() {
       "Create or update a STAFF account.",
       "",
       "Usage:",
-      "  npm run db:create-staff -- --email surgeon@example.com --name \"Clinic Team\" --password \"StrongPass123!\" [--phone \"+44 20 ...\"]",
+      "  npm run db:create-staff -- --email YOUR_STAFF_EMAIL --name \"Clinic Team\" --password \"StrongPass123!\" [--phone \"+44 ...\"]",
       "",
       "Flags:",
       "  --email      Required",

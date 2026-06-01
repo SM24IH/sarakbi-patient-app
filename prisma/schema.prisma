@@ -33,6 +33,7 @@ model User {
   threads      MessageThread[] @relation("PatientThreads")
   documents    Document[]     @relation("DocumentPatient")
   authoredDocuments Document[] @relation("DocumentAuthor")
+  patientImages PatientImage[]
 }
 
 model MessageThread {
@@ -84,4 +85,20 @@ model Document {
   createdById String
   createdBy   User     @relation("DocumentAuthor", fields: [createdById], references: [id])
   createdAt   DateTime @default(now())
+}
+
+/// Patient-uploaded clinical photos (wound checks, etc.). Files stored in blob/local storage; served via authenticated API.
+model PatientImage {
+  id              String   @id @default(cuid())
+  patientId       String
+  patient         User     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  filename        String
+  mimeType        String
+  sizeBytes       Int
+  caption         String?
+  storageProvider String
+  storageKey      String
+  createdAt       DateTime @default(now())
+
+  @@index([patientId])
 }

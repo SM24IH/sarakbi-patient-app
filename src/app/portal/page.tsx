@@ -2,10 +2,10 @@ import Link from "next/link";
 import { Card } from "@/components/ui";
 import { getSession } from "@/lib/session";
 import { patientAppIncludes } from "@/lib/patient-app-includes";
-import { getPublicSiteUrl } from "@/lib/site-url";
+import { getPracticeWebsiteUrl } from "@/lib/practice-website-url";
 
 export default async function PortalHomePage() {
-  const SITE = getPublicSiteUrl();
+  const SITE = getPracticeWebsiteUrl();
   const session = await getSession();
 
   return (
@@ -14,8 +14,7 @@ export default async function PortalHomePage() {
         Welcome{session?.name ? `, ${session.name.split(" ")[0]}` : ""}
       </h1>
       <p className="mt-2 text-ink-muted">
-        Recovery guides, reminders, documents from the team, post-operative advice, FAQs, and messaging — alongside booking and clinic
-        information.
+        Appointments, secure messaging, shared documents, recovery information, and practice contact details — in one place.
       </p>
 
       <Card className="mt-8 border-teal/15 bg-white/80">
@@ -45,6 +44,13 @@ export default async function PortalHomePage() {
             <span className="mt-4 inline-block text-sm font-medium text-gold">Open →</span>
           </Card>
         </Link>
+        <Link href="/portal/images">
+          <Card className="h-full transition hover:border-teal/30 hover:shadow-md">
+            <h2 className="font-serif text-xl font-semibold text-teal">Photos</h2>
+            <p className="mt-2 text-sm text-ink-muted">Upload wound checks or other images for the clinic team to review.</p>
+            <span className="mt-4 inline-block text-sm font-medium text-gold">Open →</span>
+          </Card>
+        </Link>
         <Link href="/portal/documents">
           <Card className="h-full transition hover:border-teal/30 hover:shadow-md">
             <h2 className="font-serif text-xl font-semibold text-teal">Documents</h2>
@@ -52,17 +58,12 @@ export default async function PortalHomePage() {
             <span className="mt-4 inline-block text-sm font-medium text-gold">Open →</span>
           </Card>
         </Link>
-        <Link href="/portal/recovery-guides">
-          <Card className="h-full transition hover:border-teal/30 hover:shadow-md">
-            <h2 className="font-serif text-xl font-semibold text-teal">Recovery guides</h2>
-            <p className="mt-2 text-sm text-ink-muted">Step-by-step timelines with activity milestones.</p>
-            <span className="mt-4 inline-block text-sm font-medium text-gold">Open →</span>
-          </Card>
-        </Link>
         <Link href="/portal/care">
           <Card className="h-full transition hover:border-teal/30 hover:shadow-md">
             <h2 className="font-serif text-xl font-semibold text-teal">Care & information</h2>
-            <p className="mt-2 text-sm text-ink-muted">Checklists, what to expect, and links to trusted resources.</p>
+            <p className="mt-2 text-sm text-ink-muted">
+              Recovery guides, checklists, FAQs, and trusted links — including step-by-step timelines.
+            </p>
             <span className="mt-4 inline-block text-sm font-medium text-gold">Open →</span>
           </Card>
         </Link>

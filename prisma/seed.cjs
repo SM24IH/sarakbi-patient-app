@@ -3,29 +3,32 @@ const bcrypt = require("bcryptjs");
 
 const prisma = new PrismaClient();
 
+/** Local development only — use strong passwords and `db:create-staff` for production staff accounts. */
+const SEED_PASSWORD = process.env.SEED_ACCOUNT_PASSWORD || "local-dev-only-change-me";
+
 async function main() {
-  const password = await bcrypt.hash("demo1234", 12);
+  const password = await bcrypt.hash(SEED_PASSWORD, 12);
 
   const staff = await prisma.user.upsert({
-    where: { email: "clinic@sarakbi.app" },
+    where: { email: "staff@clinic.invalid" },
     update: {},
     create: {
-      email: "clinic@sarakbi.app",
+      email: "staff@clinic.invalid",
       passwordHash: password,
-      name: "Cadogan Clinic Team",
-      phone: "+44 20 0000 0000",
+      name: "Clinic team",
+      phone: null,
       role: Role.STAFF,
     },
   });
 
   const patient = await prisma.user.upsert({
-    where: { email: "patient@demo.app" },
+    where: { email: "patient@clinic.invalid" },
     update: {},
     create: {
-      email: "patient@demo.app",
+      email: "patient@clinic.invalid",
       passwordHash: password,
-      name: "Demo Patient",
-      phone: "+44 7700 900000",
+      name: "Registered patient",
+      phone: null,
       role: Role.PATIENT,
     },
   });
@@ -70,7 +73,8 @@ async function main() {
     });
   }
 
-  console.log("Seed complete. Staff:", staff.email, "| Patient:", patient.email, "| Password: demo1234");
+  console.log("Seed complete. Staff:", staff.email, "| Patient:", patient.email);
+  console.log("Use SEED_ACCOUNT_PASSWORD in .env for the password (see prisma/seed.cjs).");
 }
 
 main()

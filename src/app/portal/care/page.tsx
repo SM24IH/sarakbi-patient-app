@@ -1,8 +1,9 @@
+import Link from "next/link";
 import { PatientFaqSection } from "@/components/PatientFaqSection";
 import { UrgentCareCard } from "@/components/UrgentCareCard";
 import { Card } from "@/components/ui";
 import { patientAppIncludes } from "@/lib/patient-app-includes";
-import { getPublicSiteUrl } from "@/lib/site-url";
+import { getPracticeWebsiteUrl } from "@/lib/practice-website-url";
 
 const checklistPre = [
   "Bring a list of current medications and allergies.",
@@ -19,7 +20,7 @@ const checklistPost = [
 ];
 
 export default function CarePage() {
-  const SITE = getPublicSiteUrl();
+  const SITE = getPracticeWebsiteUrl();
   return (
     <div className="mx-auto max-w-2xl">
       <h1 className="font-serif text-3xl font-semibold text-ink">Care & information</h1>
@@ -30,6 +31,19 @@ export default function CarePage() {
       <div className="mt-8">
         <UrgentCareCard variant="full" />
       </div>
+
+      <Card className="mt-8 border-teal/15 bg-white/80">
+        <h2 className="font-serif text-lg font-semibold text-teal">Recovery guides</h2>
+        <p className="mt-2 text-sm text-ink-muted">
+          Step-by-step timelines and milestones for your pathway — open the in-portal guides.
+        </p>
+        <Link
+          href="/portal/recovery-guides"
+          className="mt-4 inline-block text-sm font-medium text-gold hover:underline"
+        >
+          Open recovery guides →
+        </Link>
+      </Card>
 
       <Card className="mt-8 border-teal/15">
         <h2 className="font-serif text-xl font-semibold text-teal">What the app includes</h2>

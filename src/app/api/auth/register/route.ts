@@ -43,35 +43,53 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: firstZodIssue(parsed.error) }, { status: 400 });
   }
 
-  const email = parsed.data.email.toLowerCase();
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
+  const secret = process.env.SESSION_SECRET;
+  if (!secret || secret.length < 16) {
+    console.error("[register] SESSION_SECRET is missing or shorter than 16 characters");
+    return NextResponse.json(
+      { error: "Registration is temporarily unavailable. Please try again later." },
+      { status: 503 },
+    );
   }
 
-  const user = await prisma.user.create({
-    data: {
-      email,
-      passwordHash: await hashPassword(parsed.data.password),
-      name: parsed.data.name.trim(),
-      phone: parsed.data.phone?.trim() || null,
-      role: Role.PATIENT,
-    },
-  });
+  const email = parsed.data.email.toLowerCase();
 
-  const token = await createSessionToken({
-    sub: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-  });
-  await setSessionCookie(token);
+  try {
+    const existing = await prisma.user.findUnique({ where: { email } });
+    if (existing) {
+      return NextResponse.json({ error: "An account with this email already exists" }, { status: 409 });
+    }
 
-  return NextResponse.json({
-    ok: true,
-    name: user.name,
-    role: user.role,
-    token,
-    redirect: "/portal",
-  });
+    const user = await prisma.user.create({
+      data: {
+        email,
+        passwordHash: await hashPassword(parsed.data.password),
+        name: parsed.data.name.trim(),
+        phone: parsed.data.phone?.trim() || null,
+        role: Role.PATIENT,
+      },
+    });
+
+    const token = await createSessionToken({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    });
+    await setSessionCookie(token);
+
+    return NextResponse.json({
+      ok: true,
+      name: user.name,
+      role: user.role,
+      token,
+      redirect: "/portal",
+    });
+  } catch (err) {
+    console.error("[register]", err);
+    return NextResponse.json(
+      { error: "Registration failed. Please try again." },
+      { status: 500 },
+    );
+  }
 }

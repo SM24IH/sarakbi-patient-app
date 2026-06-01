@@ -6,6 +6,7 @@ const patientLinks = [
   { href: "/portal", label: "Home" },
   { href: "/portal/appointments", label: "Appointments" },
   { href: "/portal/messages", label: "Messages" },
+  { href: "/portal/images", label: "Photos" },
   { href: "/portal/documents", label: "Documents" },
   { href: "/portal/recovery-guides", label: "Recovery guides" },
   { href: "/portal/care", label: "Care & info" },
@@ -16,6 +17,7 @@ const teamLinks = [
   { href: "/team", label: "Overview" },
   { href: "/team/appointments", label: "Appointments" },
   { href: "/team/messages", label: "Inbox" },
+  { href: "/team/images", label: "Patient photos" },
   { href: "/team/documents", label: "Documents" },
   { href: "/team/patients", label: "Patients" },
 ];

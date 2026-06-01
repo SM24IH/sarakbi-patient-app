@@ -13,11 +13,22 @@ type Appt = {
   staffNotes: string | null;
 };
 
+function formatSlotLabel(iso: string) {
+  try {
+    return new Date(iso).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" });
+  } catch {
+    return iso;
+  }
+}
+
 export function AppointmentsClient() {
   const [list, setList] = useState<Appt[]>([]);
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState("Cadogan Clinic, Chelsea");
   const [type, setType] = useState("");
+  const [slots, setSlots] = useState<string[]>([]);
+  const [slotLoading, setSlotLoading] = useState(false);
+  const [slotError, setSlotError] = useState<string | null>(null);
   const [requestedAt, setRequestedAt] = useState("");
   const [notes, setNotes] = useState("");
   const [msg, setMsg] = useState("");
@@ -30,15 +41,46 @@ export function AppointmentsClient() {
     setLoading(false);
   }, []);
 
+  const loadSlots = useCallback(async () => {
+    setSlotLoading(true);
+    setSlotError(null);
+    try {
+      const res = await fetch(
+        `/api/appointments?slots=1&location=${encodeURIComponent(location)}`,
+        { credentials: "include" },
+      );
+      const data = (await res.json()) as { slots?: string[]; error?: string };
+      if (!res.ok) {
+        setSlots([]);
+        setRequestedAt("");
+        setSlotError(data.error ?? "Could not load slots");
+        return;
+      }
+      const next = data.slots ?? [];
+      setSlots(next);
+      setRequestedAt((prev) => (next.includes(prev) ? prev : next[0] ?? ""));
+    } catch {
+      setSlots([]);
+      setRequestedAt("");
+      setSlotError("Could not load slots");
+    } finally {
+      setSlotLoading(false);
+    }
+  }, [location]);
+
   useEffect(() => {
     load();
   }, [load]);
+
+  useEffect(() => {
+    loadSlots();
+  }, [loadSlots]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setMsg("");
     if (!requestedAt || !type.trim()) {
-      setMsg("Please choose date/time and appointment type.");
+      setMsg("Please choose a slot and appointment type.");
       return;
     }
     setSubmitting(true);
@@ -56,9 +98,9 @@ export function AppointmentsClient() {
       }
       setType("");
       setNotes("");
-      setRequestedAt("");
       setMsg("Request sent. The clinic will confirm shortly.");
       await load();
+      await loadSlots();
     } finally {
       setSubmitting(false);
     }
@@ -71,13 +113,19 @@ export function AppointmentsClient() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "CANCELLED" }),
     });
-    if (res.ok) await load();
+    if (res.ok) {
+      await load();
+      await loadSlots();
+    }
   }
 
   return (
     <div className="mt-8 space-y-8">
       <Card>
         <h2 className="font-serif text-lg font-semibold text-teal">New request</h2>
+        <p className="mt-2 text-sm text-ink-muted">
+          Choose a free slot (clinic hours, UK). Times are shown in your browser&apos;s local timezone.
+        </p>
         <form onSubmit={submit} className="mt-4 space-y-4">
           <div>
             <Label>Location</Label>
@@ -94,28 +142,42 @@ export function AppointmentsClient() {
             <Label htmlFor="type">Type of visit</Label>
             <Input
               id="type"
-              placeholder="e.g. Initial consultation, follow-up, One Stop Clinic"
+              placeholder=""
               value={type}
               onChange={(e) => setType(e.target.value)}
               required
             />
           </div>
           <div>
-            <Label htmlFor="when">Preferred date & time</Label>
-            <Input
-              id="when"
-              type="datetime-local"
-              value={requestedAt}
-              onChange={(e) => setRequestedAt(e.target.value)}
-              required
-            />
+            <Label htmlFor="slot">Preferred date & time</Label>
+            {slotLoading ? (
+              <p className="mt-2 text-sm text-ink-muted">Loading available times…</p>
+            ) : slotError ? (
+              <p className="mt-2 text-sm text-red-600">{slotError}</p>
+            ) : slots.length === 0 ? (
+              <p className="mt-2 text-sm text-ink-muted">No slots available. Try another location or contact the practice.</p>
+            ) : (
+              <select
+                id="slot"
+                className="mt-1 w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
+                value={requestedAt}
+                onChange={(e) => setRequestedAt(e.target.value)}
+                required
+              >
+                {slots.map((s) => (
+                  <option key={s} value={s}>
+                    {formatSlotLabel(s)}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
           <div>
             <Label htmlFor="notes">Notes (optional)</Label>
             <TextArea id="notes" rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} />
           </div>
           {msg && <p className="text-sm text-ink-muted">{msg}</p>}
-          <Button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={submitting || slotLoading || slots.length === 0}>
             {submitting ? "Submitting…" : "Submit request"}
           </Button>
         </form>

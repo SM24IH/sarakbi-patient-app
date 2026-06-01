@@ -112,7 +112,7 @@ export function TeamDocumentsClient() {
           </div>
           <div>
             <Label htmlFor="title">Title</Label>
-            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="e.g. Clinic letter 12 Mar" />
+            <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="" />
           </div>
           <div>
             <Label htmlFor="url">Document URL (https)</Label>
@@ -122,7 +122,7 @@ export function TeamDocumentsClient() {
               value={documentUrl}
               onChange={(e) => setDocumentUrl(e.target.value)}
               required
-              placeholder="https://…"
+              placeholder="https://"
             />
           </div>
           <div>
