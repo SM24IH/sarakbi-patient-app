@@ -6,6 +6,7 @@ import {
   PATIENT_IMAGE_ALLOWED_MIME,
   PATIENT_IMAGE_MAX_BYTES,
 } from "@/lib/patient-images-config";
+import { notifyStaffLater, notifyStaffNewPhoto } from "@/lib/staff-notify-email";
 import { getSession } from "@/lib/session";
 
 export const runtime = "nodejs";
@@ -112,6 +113,17 @@ export async function POST(request: Request) {
       },
       select: imageSelect,
     });
+
+    notifyStaffLater(() =>
+      notifyStaffNewPhoto({
+        patientName: session.name || "Patient",
+        patientEmail: session.email,
+        filename: image.filename,
+        caption: image.caption,
+        imageId: image.id,
+      }),
+    );
+
     return NextResponse.json({ image });
   } catch (err) {
     await prisma.patientImage.delete({ where: { id: record.id } }).catch(() => {});

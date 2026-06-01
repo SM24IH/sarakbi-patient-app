@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAvailableSlotISOStrings, isRequestedSlotValid } from "@/lib/appointment-slots";
 import { prisma } from "@/lib/db";
+import { notifyStaffLater, notifyStaffNewAppointment } from "@/lib/staff-notify-email";
 import { getSession } from "@/lib/session";
 
 const createSchema = z.object({
@@ -105,6 +106,18 @@ export async function POST(request: Request) {
       notes: parsed.data.notes?.trim() || null,
     },
   });
+
+  notifyStaffLater(() =>
+    notifyStaffNewAppointment({
+      patientName: session.name || "Patient",
+      patientEmail: session.email,
+      type: appt.type,
+      location: appt.location,
+      requestedAt: appt.requestedAt,
+      notes: appt.notes,
+      appointmentId: appt.id,
+    }),
+  );
 
   return NextResponse.json({ appointment: appt });
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { notifyStaffLater, notifyStaffNewMessage } from "@/lib/staff-notify-email";
 import { getSession } from "@/lib/session";
 import { messageThreadCategorySchema } from "@/lib/message-categories";
 
@@ -77,6 +78,18 @@ export async function POST(request: Request) {
       },
     },
   });
+
+  notifyStaffLater(() =>
+    notifyStaffNewMessage({
+      patientName: session.name || "Patient",
+      patientEmail: session.email,
+      subject: thread.subject,
+      category: thread.category,
+      body: parsed.data.body.trim(),
+      threadId: thread.id,
+      isNewThread: true,
+    }),
+  );
 
   return NextResponse.json({ threadId: thread.id });
 }

@@ -25,6 +25,9 @@ Repo root: `sarakbi-patient-app` (this folder).
 | `NEXT_PUBLIC_SITE_URL` | `https://sarakbi-patient-app.vercel.app` (portal API — no trailing slash) |
 | `NEXT_PUBLIC_PRACTICE_WEBSITE_URL` | `https://www.willsarakbi.com` (marketing site links) |
 | `BLOB_READ_WRITE_TOKEN` | Auto-added when you connect **Vercel Blob** storage (required for patient photo uploads in production) |
+| `RESEND_API_KEY` | From [resend.com](https://resend.com) — staff email alerts |
+| `STAFF_NOTIFY_EMAIL` | `pa@willsarakbi.com` (default if unset) |
+| `STAFF_NOTIFY_FROM` | `Patient Portal <notify@willsarakbi.com>` after domain verified (use Resend test sender until then) |
 
 4. Deploy.
 

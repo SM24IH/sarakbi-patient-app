@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { notifyStaffLater, notifyStaffNewMessage } from "@/lib/staff-notify-email";
 import { getSession } from "@/lib/session";
 
 const postMessageSchema = z.object({
@@ -80,6 +81,26 @@ export async function POST(request: Request, { params }: Params) {
     where: { id },
     data: { updatedAt: new Date() },
   });
+
+  if (session.role === "PATIENT") {
+    const full = await prisma.messageThread.findUnique({
+      where: { id },
+      include: { patient: { select: { name: true, email: true } } },
+    });
+    if (full) {
+      notifyStaffLater(() =>
+        notifyStaffNewMessage({
+          patientName: full.patient.name,
+          patientEmail: full.patient.email,
+          subject: full.subject,
+          category: full.category,
+          body: parsed.data.body.trim(),
+          threadId: id,
+          isNewThread: false,
+        }),
+      );
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }
