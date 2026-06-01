@@ -11,6 +11,10 @@ const bodySchema = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
   name: z.string().min(1, "Enter your name").max(120),
   phone: z.string().max(40).optional(),
+  inviteToken: z.string().optional(),
+  privacyAccepted: z.literal(true, {
+    errorMap: () => ({ message: "You must accept the privacy notice" }),
+  }),
 });
 
 function firstZodIssue(err: z.ZodError): string {
@@ -22,15 +26,7 @@ function firstZodIssue(err: z.ZodError): string {
 }
 
 export async function POST(request: Request) {
-  if (!isPublicRegistrationEnabled()) {
-    return NextResponse.json(
-      {
-        error:
-          "Online registration is not available. Please contact the practice to receive portal access.",
-      },
-      { status: 403 },
-    );
-  }
+  const publicOpen = isPublicRegistrationEnabled();
 
   let json: unknown;
   try {
@@ -43,9 +39,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: firstZodIssue(parsed.error) }, { status: 400 });
   }
 
+  const inviteToken = parsed.data.inviteToken?.trim();
+  if (!publicOpen && !inviteToken) {
+    return NextResponse.json(
+      {
+        error:
+          "Online registration is not available. Please use the invitation link from the practice.",
+      },
+      { status: 403 },
+    );
+  }
+
   const secret = process.env.SESSION_SECRET;
   if (!secret || secret.length < 16) {
-    console.error("[register] SESSION_SECRET is missing or shorter than 16 characters");
     return NextResponse.json(
       { error: "Registration is temporarily unavailable. Please try again later." },
       { status: 503 },
@@ -53,6 +59,18 @@ export async function POST(request: Request) {
   }
 
   const email = parsed.data.email.toLowerCase();
+
+  let inviteId: string | null = null;
+  if (inviteToken) {
+    const invite = await prisma.patientInvite.findUnique({ where: { token: inviteToken } });
+    if (!invite || invite.usedAt || invite.expiresAt < new Date()) {
+      return NextResponse.json({ error: "Invitation link is invalid or expired." }, { status: 400 });
+    }
+    if (invite.email.toLowerCase() !== email) {
+      return NextResponse.json({ error: "Email must match your invitation." }, { status: 400 });
+    }
+    inviteId = invite.id;
+  }
 
   try {
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -69,6 +87,13 @@ export async function POST(request: Request) {
         role: Role.PATIENT,
       },
     });
+
+    if (inviteId) {
+      await prisma.patientInvite.update({
+        where: { id: inviteId },
+        data: { usedAt: new Date() },
+      });
+    }
 
     const token = await createSessionToken({
       sub: user.id,
@@ -87,9 +112,6 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("[register]", err);
-    return NextResponse.json(
-      { error: "Registration failed. Please try again." },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Registration failed. Please try again." }, { status: 500 });
   }
 }

@@ -10,6 +10,7 @@ type Thread = {
   subject: string;
   category: string | null;
   updatedAt: string;
+  unreadCount?: number;
   messages: Array<{
     body: string;
     createdAt: string;
@@ -101,11 +102,23 @@ export function MessagesInboxClient() {
           <ul className="mt-4 space-y-2">
             {threads.map((t) => {
               const last = t.messages[0];
+              const unread = (t.unreadCount ?? 0) > 0;
               return (
                 <li key={t.id}>
                   <Link href={`/portal/messages/${t.id}`}>
-                    <Card className="!p-4 transition hover:border-teal/40">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-teal">{categoryLabel(t.category)}</p>
+                    <Card
+                      className={`!p-4 transition hover:border-teal/40 ${unread ? "border-teal/40 bg-teal/[0.04]" : ""}`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-teal">
+                          {categoryLabel(t.category)}
+                        </p>
+                        {unread ? (
+                          <span className="rounded-full bg-teal px-2 py-0.5 text-xs font-semibold text-white">
+                            New
+                          </span>
+                        ) : null}
+                      </div>
                       <p className="mt-1 font-medium text-ink">{t.subject}</p>
                       <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{last?.body}</p>
                       <p className="mt-2 text-xs text-stone-400">

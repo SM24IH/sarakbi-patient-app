@@ -1,39 +1,38 @@
 import Link from "next/link";
 import { Card } from "@/components/ui";
-import { prisma } from "@/lib/db";
+import { TeamOverviewStats } from "./team-overview-stats";
 
-export default async function TeamHomePage() {
-  const [pendingAppts, openThreads] = await Promise.all([
-    prisma.appointment.count({ where: { status: "REQUESTED" } }),
-    prisma.messageThread.count(),
-  ]);
-
+export default function TeamHomePage() {
   return (
     <div className="mx-auto max-w-3xl">
       <h1 className="font-serif text-3xl font-semibold text-ink">Clinic overview</h1>
-      <p className="mt-2 text-sm text-ink-muted">Quick snapshot of booking requests and message threads.</p>
+      <p className="mt-2 text-sm text-ink-muted">Messages, appointments, and patient photos at a glance.</p>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
-        <Card>
-          <p className="text-sm font-medium text-ink-muted">Pending appointment requests</p>
-          <p className="mt-2 font-serif text-4xl font-semibold text-teal">{pendingAppts}</p>
-          <Link href="/team/appointments" className="mt-4 inline-block text-sm text-gold hover:underline">
-            Manage appointments →
-          </Link>
-        </Card>
-        <Card>
-          <p className="text-sm font-medium text-ink-muted">Message threads</p>
-          <p className="mt-2 font-serif text-4xl font-semibold text-teal">{openThreads}</p>
-          <Link href="/team/messages" className="mt-4 inline-block text-sm text-gold hover:underline">
-            Open inbox →
-          </Link>
-        </Card>
+      <TeamOverviewStats />
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <Link href="/team/invites">
+          <Card className="h-full transition hover:border-teal/30">
+            <h2 className="font-serif text-lg font-semibold text-teal">Invite patients</h2>
+            <p className="mt-2 text-sm text-ink-muted">Email a registration link to new portal users.</p>
+          </Card>
+        </Link>
+        <Link href="/team/patients">
+          <Card className="h-full transition hover:border-teal/30">
+            <h2 className="font-serif text-lg font-semibold text-teal">Patient directory</h2>
+            <p className="mt-2 text-sm text-ink-muted">View records, message, or remove accounts.</p>
+          </Card>
+        </Link>
       </div>
 
       <Card className="mt-8 border-amber-200 bg-amber-50/80">
         <p className="text-sm text-amber-950">
-          <strong>Compliance:</strong> For real patient data, add audit logging, NHS DSPT / UK GDPR measures, clinical safety review, and
-          integration with your practice management system. This build is a functional prototype.
+          <strong>Compliance:</strong> Privacy notice at{" "}
+          <Link href="/privacy" className="underline">
+            /privacy
+          </Link>
+          . For regulated clinical data, add audit logging, DSPT measures, and PMS integration as your practice
+          requires.
         </p>
       </Card>
     </div>

@@ -23,7 +23,9 @@ export default async function PortalHomePage() {
           {patientAppIncludes.map((item) => (
             <li key={item.title}>
               <strong className="text-ink">{item.title}</strong>
-              <span className="text-ink-muted"> — {item.description}</span>
+              {item.description ? (
+                <span className="text-ink-muted"> — {item.description}</span>
+              ) : null}
             </li>
           ))}
         </ul>
@@ -45,10 +47,10 @@ export default async function PortalHomePage() {
           </Card>
         </Link>
         <Link href="/portal/images">
-          <Card className="h-full transition hover:border-teal/30 hover:shadow-md">
-            <h2 className="font-serif text-xl font-semibold text-teal">Photos</h2>
-            <p className="mt-2 text-sm text-ink-muted">Upload wound checks or other images for the clinic team to review.</p>
-            <span className="mt-4 inline-block text-sm font-medium text-gold">Open →</span>
+          <Card className="h-full border-gold/30 bg-gold/[0.04] transition hover:border-gold/50 hover:shadow-md">
+            <h2 className="font-serif text-xl font-semibold text-teal">Upload a photo</h2>
+            <p className="mt-2 text-sm text-ink-muted">Share an image with the clinic team.</p>
+            <span className="mt-4 inline-block text-sm font-medium text-gold">Upload →</span>
           </Card>
         </Link>
         <Link href="/portal/documents">

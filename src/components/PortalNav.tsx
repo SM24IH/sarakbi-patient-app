@@ -17,6 +17,7 @@ const teamLinks = [
   { href: "/team", label: "Overview" },
   { href: "/team/appointments", label: "Appointments" },
   { href: "/team/messages", label: "Inbox" },
+  { href: "/team/invites", label: "Invites" },
   { href: "/team/images", label: "Patient photos" },
   { href: "/team/documents", label: "Documents" },
   { href: "/team/patients", label: "Patients" },
@@ -37,10 +38,10 @@ export function PortalNav({
         <div className="mb-3">
           <Image
             src="/practice-logo.png"
-            alt="Mr Will Sarakbi — Surgeon"
+            alt="Mr Will Sarakbi"
             width={180}
             height={72}
-            className="h-11 w-auto object-contain lg:h-12"
+            className="h-11 w-auto rounded-md bg-black object-contain p-1 lg:h-12"
           />
         </div>
         <p className="text-xs text-ink-muted">{title}</p>

@@ -68,7 +68,7 @@ export function PatientImagesClient() {
 
       setCaption("");
       if (fileRef.current) fileRef.current.value = "";
-      setMsg("Image uploaded. The clinic team can review it in their console.");
+      setMsg("Uploaded.");
       await load();
     } finally {
       setUploading(false);
@@ -92,12 +92,7 @@ export function PatientImagesClient() {
   return (
     <div className="mt-6 space-y-8">
       <Card className="!p-6">
-        <h2 className="font-serif text-lg font-semibold text-teal">Upload a photo</h2>
-        <p className="mt-2 text-sm text-ink-muted">
-          Share wound checks or other images with the clinic team. For emergencies, call the urgent line — do not rely on
-          uploads alone.
-        </p>
-        <form onSubmit={onUpload} className="mt-4 space-y-4">
+        <form onSubmit={onUpload} className="space-y-4">
           <div>
             <Label htmlFor="image-file">Image</Label>
             <input
@@ -108,7 +103,6 @@ export function PatientImagesClient() {
               required
               className="w-full rounded-md border border-stone-200 bg-white px-3 py-2 text-sm text-ink shadow-sm file:mr-3 file:rounded file:border-0 file:bg-cream-dark file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink focus:border-teal focus:outline-none focus:ring-1 focus:ring-teal"
             />
-            <p className="mt-1 text-xs text-ink-muted">JPEG, PNG, WebP, or HEIC · max 8 MB</p>
           </div>
           <div>
             <Label htmlFor="image-caption">Note (optional)</Label>
@@ -116,13 +110,12 @@ export function PatientImagesClient() {
               id="image-caption"
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
-              placeholder="e.g. Left breast incision, day 5"
               maxLength={500}
             />
           </div>
           {msg ? <p className="text-sm text-ink-muted">{msg}</p> : null}
           <Button type="submit" disabled={uploading}>
-            {uploading ? "Uploading…" : "Upload image"}
+            {uploading ? "Uploading…" : "Upload"}
           </Button>
         </form>
       </Card>

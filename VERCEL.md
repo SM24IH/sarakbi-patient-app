@@ -28,6 +28,7 @@ Repo root: `sarakbi-patient-app` (this folder).
 | `RESEND_API_KEY` | From [resend.com](https://resend.com) — staff email alerts |
 | `STAFF_NOTIFY_EMAIL` | `pa@willsarakbi.com` (default if unset) |
 | `STAFF_NOTIFY_FROM` | `Patient Portal <notify@willsarakbi.com>` after domain verified (use Resend test sender until then) |
+| `PUBLIC_REGISTRATION` | `false` to require staff invite links for new patient accounts (optional; default is open registration) |
 
 4. Deploy.
 

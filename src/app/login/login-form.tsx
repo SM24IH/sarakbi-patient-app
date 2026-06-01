@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Button, Card, Input, Label } from "@/components/ui";
@@ -71,6 +72,11 @@ export function LoginForm() {
           {loading ? "Signing in…" : "Sign in"}
         </Button>
       </form>
+      <p className="mt-4 text-center text-sm">
+        <Link href="/forgot-password" className="text-teal hover:underline">
+          Forgot password?
+        </Link>
+      </p>
     </Card>
   );
 }

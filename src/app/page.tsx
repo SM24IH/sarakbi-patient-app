@@ -17,10 +17,10 @@ export default function HomePage() {
           <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
             <Image
               src="/practice-logo.png"
-              alt="Mr Will Sarakbi — Surgeon"
+              alt="Mr Will Sarakbi"
               width={200}
               height={80}
-              className="h-12 w-auto shrink-0 object-contain sm:h-14"
+              className="h-12 w-auto shrink-0 rounded-md bg-black object-contain p-1 sm:h-14"
               priority
             />
             <div className="min-w-0">
@@ -50,7 +50,17 @@ export default function HomePage() {
       </header>
 
       <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
-        <p className="font-serif text-4xl font-semibold leading-tight text-ink sm:text-5xl">
+        <div className="mx-auto max-w-md rounded-xl bg-black px-8 py-10 shadow-lg">
+          <Image
+            src="/practice-logo.png"
+            alt="Mr Will Sarakbi"
+            width={480}
+            height={240}
+            className="mx-auto h-auto w-full object-contain"
+            priority
+          />
+        </div>
+        <p className="mt-12 font-serif text-4xl font-semibold leading-tight text-ink sm:text-5xl">
           Exceptional breast care.
           <span className="text-gold"> Outstanding support.</span>
         </p>
@@ -94,7 +104,9 @@ export default function HomePage() {
             {patientAppIncludes.map((item) => (
               <Card key={item.title} className="!p-5">
                 <h3 className="font-serif text-lg font-semibold text-teal">{item.title}</h3>
-                <p className="mt-2 text-sm text-ink-muted">{item.description}</p>
+                {item.description ? (
+                  <p className="mt-2 text-sm text-ink-muted">{item.description}</p>
+                ) : null}
               </Card>
             ))}
           </div>

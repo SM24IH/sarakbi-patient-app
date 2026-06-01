@@ -12,13 +12,13 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-cream-blue to-cream px-4 py-12">
       <div className="w-full max-w-md">
-        <div className="mb-6 flex justify-center">
+        <div className="mb-6 flex justify-center rounded-xl bg-black px-8 py-6">
           <Image
             src="/practice-logo.png"
-            alt="Mr Will Sarakbi — Surgeon"
-            width={220}
-            height={88}
-            className="h-16 w-auto object-contain sm:h-[4.5rem]"
+            alt="Mr Will Sarakbi"
+            width={280}
+            height={140}
+            className="h-20 w-auto object-contain sm:h-24"
             priority
           />
         </div>

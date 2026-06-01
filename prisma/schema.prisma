@@ -34,6 +34,8 @@ model User {
   documents    Document[]     @relation("DocumentPatient")
   authoredDocuments Document[] @relation("DocumentAuthor")
   patientImages PatientImage[]
+  invitesCreated PatientInvite[] @relation("InvitesCreated")
+  passwordResetTokens PasswordResetToken[]
 }
 
 model MessageThread {
@@ -101,4 +103,28 @@ model PatientImage {
   createdAt       DateTime @default(now())
 
   @@index([patientId])
+}
+
+/// Staff-issued invite for patient registration (required when public registration is off).
+model PatientInvite {
+  id          String    @id @default(cuid())
+  email       String
+  name        String?
+  token       String    @unique
+  createdById String
+  createdBy   User      @relation("InvitesCreated", fields: [createdById], references: [id])
+  usedAt      DateTime?
+  expiresAt   DateTime
+  createdAt   DateTime  @default(now())
+
+  @@index([email])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }

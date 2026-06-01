@@ -10,7 +10,7 @@ export const patientAppIncludes = [
   },
   {
     title: "Photos",
-    description: "Upload wound checks or other images for the clinic team to review.",
+    description: "",
   },
   {
     title: "Documents",

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { markThreadRead } from "@/lib/message-read";
+import { notifyPatientNewMessage, notifyEmailLater } from "@/lib/portal-email";
 import { notifyStaffLater, notifyStaffNewMessage } from "@/lib/staff-notify-email";
 import { getSession } from "@/lib/session";
 
@@ -38,6 +40,8 @@ export async function GET(_request: Request, { params }: Params) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
+  await markThreadRead(id, session.sub, session.role);
+
   return NextResponse.json({ thread });
 }
 
@@ -46,7 +50,10 @@ export async function POST(request: Request, { params }: Params) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  const thread = await prisma.messageThread.findUnique({ where: { id } });
+  const thread = await prisma.messageThread.findUnique({
+    where: { id },
+    include: { patient: { select: { name: true, email: true } } },
+  });
   if (!thread) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -69,11 +76,13 @@ export async function POST(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Invalid input" }, { status: 400 });
   }
 
+  const body = parsed.data.body.trim();
+
   await prisma.message.create({
     data: {
       threadId: id,
       senderId: session.sub,
-      body: parsed.data.body.trim(),
+      body,
     },
   });
 
@@ -83,23 +92,27 @@ export async function POST(request: Request, { params }: Params) {
   });
 
   if (session.role === "PATIENT") {
-    const full = await prisma.messageThread.findUnique({
-      where: { id },
-      include: { patient: { select: { name: true, email: true } } },
-    });
-    if (full) {
-      notifyStaffLater(() =>
-        notifyStaffNewMessage({
-          patientName: full.patient.name,
-          patientEmail: full.patient.email,
-          subject: full.subject,
-          category: full.category,
-          body: parsed.data.body.trim(),
-          threadId: id,
-          isNewThread: false,
-        }),
-      );
-    }
+    notifyStaffLater(() =>
+      notifyStaffNewMessage({
+        patientName: session.name || thread.patient.name,
+        patientEmail: session.email,
+        subject: thread.subject,
+        category: thread.category,
+        body,
+        threadId: id,
+        isNewThread: false,
+      }),
+    );
+  } else if (session.role === "STAFF") {
+    notifyEmailLater(() =>
+      notifyPatientNewMessage({
+        patientEmail: thread.patient.email,
+        patientName: thread.patient.name,
+        subject: thread.subject,
+        body,
+        threadId: id,
+      }),
+    );
   }
 
   return NextResponse.json({ ok: true });

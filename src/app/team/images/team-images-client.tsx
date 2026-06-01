@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Card } from "@/components/ui";
 
@@ -21,9 +22,11 @@ function formatSize(bytes: number) {
 }
 
 export function TeamImagesClient() {
+  const searchParams = useSearchParams();
+  const initialPatient = searchParams.get("patientId")?.trim() ?? "";
   const [patients, setPatients] = useState<Patient[]>([]);
   const [images, setImages] = useState<ImageRecord[]>([]);
-  const [patientFilter, setPatientFilter] = useState("");
+  const [patientFilter, setPatientFilter] = useState(initialPatient);
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState<string | null>(null);
 
